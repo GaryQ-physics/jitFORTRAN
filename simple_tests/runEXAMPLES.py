@@ -3,7 +3,8 @@
 import sys
 import os
 
-dryrun=False
+dryrun=True
+writetodir = True
 debug=False
 
 if len(sys.argv) == 1:
@@ -28,12 +29,14 @@ if debug: deb = open('debug.txt', 'w')
 prevline = ''
 line = f.readline()
 if debug: deb.write(str(line))
+example_num = 0
 while(True): # loop over code blocks
     if line is None:
         continue
     if line == '':
         break
     elif line == '\n' and prevline == separate:
+        example_num += 1
         filenames = []
         while(True): # loop over files in code block
             if line == '':
@@ -44,7 +47,7 @@ while(True): # loop over code blocks
                 if dryrun:
                     print('runbash:'+line[2:-1])
                 else:
-#cd doesnt change directory any furhter os.system calls are in, so this needs to be done in one line
+#cd doesnt change directory any further os.system calls are in, so this needs to be done in one line
                     os.system('cd %s && %s'%(direct,line[2:-1]))
             elif line == start:
                 filename = prevline[1:-1]
@@ -64,9 +67,16 @@ while(True): # loop over code blocks
                     if line == end:
                         break
 
+                if writetodir:
+                    exdirect = direct + 'example%d/'%(example_num)
+                    if not os.path.exists(exdirect): os.makedirs(exdirect)
+                    with open(exdirect + filename, 'w') as g:
+                        g.write(''.join(filelines))
+
                 if dryrun: 
                     print(str('filename = '+str(filename)))
-                    print(str('filelines = '+str(filelines)))
+                    #print(str('filelines = '+str(filelines)))
+                    print(direct + 'example%d/'%(example_num) + filename)
                 else:
                     with open(direct + filename, 'w') as g:
                         g.write(''.join(filelines))
@@ -75,7 +85,7 @@ while(True): # loop over code blocks
             line = f.readline()
             if debug: deb.write(str('b\n'))
 
-        filenames.append('a.out')
+        filenames.append('a.out') # due to extra separators at end of EXAMPLES file, this add an extra time for last example
         for filename in filenames:
             if dryrun:
                 print('remove '+direct+filename)
