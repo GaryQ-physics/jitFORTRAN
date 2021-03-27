@@ -14,7 +14,6 @@ def demo1():
     foo_fortran = '''!FOO
 subroutine FOO(A,B,C,N)
     implicit none
-    !will pass the transposed np array (which is in fortran order) having shape (3, N, M)
 
     integer, intent(in) :: N
     real(8), intent(in), dimension(0:N-1) :: A, B
@@ -44,7 +43,6 @@ def demo2():# equivalent to demo1, but calling extra subroutine within loop
     foo_fortran = '''!FOO
 subroutine FOO(A,B,C,N)
     implicit none
-    !will pass the transposed np array (which is in fortran order) having shape (3, N, M)
 
     integer, intent(in) :: N
     real(8), intent(in), dimension(0:N-1) :: A, B
