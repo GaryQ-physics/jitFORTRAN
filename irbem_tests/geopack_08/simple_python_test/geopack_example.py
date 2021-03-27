@@ -37,7 +37,7 @@ C inputed dimension of arrays
       INTEGER*8 ind
 
 C  RECALC_08 prepares elements of rot matrix and puts in common block
-C  note since GEO and MAG are independent of solar wind, set 
+C  note since GEO and MAG are independent of solar wind, set
 C   can set VGSEX=-400.0, VGSEY=0.0, VGSEZ=0.0
       CALL RECALC_08(IYEAR,IDAY,IHOUR,MIN,ISEC,-4.0d2,0.0d0,0.0d0)
 
@@ -49,11 +49,11 @@ C   can set VGSEX=-400.0, VGSEY=0.0, VGSEZ=0.0
 '''
 
 
-geomag_08_V_F = jitFORTRAN.Fortran_Subroutine(wrapper_script, 
+geomag_08_V_F = jitFORTRAN.Fortran_Subroutine(wrapper_script,
                                               wrapper_subroutine_name,
                                               include='geopack_08')
 
-IYEAR = 1
+IYEAR = 1997
 IDAY = 1
 IHOUR = 1
 MIN = 1
@@ -65,9 +65,9 @@ N = 5
 XGEO_V = np.array( [0., 1., 2., 3., 4.] , dtype=np.float64)
 YGEO_V = np.array( [0., 1., 2., 3., 4.] , dtype=np.float64)
 ZGEO_V = np.array( [0., 1., 2., 3., 4.] , dtype=np.float64)
-XMAG_V = np.array( [0., 1., 2., 3., 4.] , dtype=np.float64)
-YMAG_V = np.array( [0., 1., 2., 3., 4.] , dtype=np.float64)
-ZMAG_V = np.array( [0., 1., 2., 3., 4.] , dtype=np.float64)
+XMAG_V = np.zeros(XGEO_V.size)
+YMAG_V = np.zeros( XGEO_V.size)
+ZMAG_V = np.zeros( XGEO_V.size)
 
 print(XGEO_V)
 print(YGEO_V)
@@ -87,5 +87,3 @@ print(ZGEO_V)
 print(XMAG_V)
 print(YMAG_V)
 print(ZMAG_V)
-
-
