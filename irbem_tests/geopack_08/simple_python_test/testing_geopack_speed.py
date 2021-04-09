@@ -40,7 +40,7 @@ geomag_08_V_F = jitFORTRAN.Fortran_Subroutine(wrapper_script,
 
 
 ### two ways either do .execute once with a small array to compile
-### 
+### or call .compile() before the .execute()
 
 start_time = time.time()
 geomag_08_V_F.execute(X1,Y1,Z1,X2,Y2,Z2,
