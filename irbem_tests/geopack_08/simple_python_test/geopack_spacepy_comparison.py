@@ -18,7 +18,7 @@ from matplotlib import pyplot as plt
 debug = False
 
 # options: SMGSW_08_V , GEOMAG_08_V
-wrapper_subroutine_name='SMGSW_08_V'
+wrapper_subroutine_name='GEOMAG_08_V'
 # allowable timeframe 1965-2020
 IYEAR = 1997
 IDAY = 1
@@ -31,13 +31,16 @@ ISEC = 0
 # if J>0, then X1,Y1,Z1 -> X2, Y2,Z2
 # if J<0, then X1,Y1,Z1 <- X2, Y2,Z2
 J = 1 # test out 1 and -1 for both sc and gp
-
-X1 = np.arange(0,5,dtype=np.float64)
-Y1 = np.arange(0,5,dtype=np.float64)
-Z1 = np.arange(0,5,dtype=np.float64)
-X2 = np.arange(0,5,dtype=np.float64)
-Y2 = np.arange(0,5,dtype=np.float64)
-Z2 = np.arange(0,5,dtype=np.float64)
+arr_size = 10**1
+X1 = np.arange(0,arr_size,dtype=np.float64)
+Y1 = np.arange(0,arr_size,dtype=np.float64)
+Z1 = np.arange(0,arr_size,dtype=np.float64)
+# X2 = np.arange(0,5,dtype=np.float64)
+# Y2 = np.arange(0,5,dtype=np.float64)
+# Z2 = np.arange(0,5,dtype=np.float64)
+X2 = np.zeros(arr_size, dtype=np.float64)
+Y2 = np.zeros(arr_size, dtype=np.float64)
+Z2 = np.zeros(arr_size, dtype=np.float64)
 
 N = X1.size
 
@@ -52,7 +55,8 @@ geomag_08_V_F.execute(X1,Y1,Z1,X2,Y2,Z2,
                     J,
                     IYEAR,IDAY,IHOUR,MIN,ISEC,
                     N)
-time = "{0:04d} {1:03d} {2:02d} {3:02d} {4:02d}".format(IYEAR, IDAY, IHOUR, MIN, ISEC)
+
+time = "{0:04} {1:03d} {2:02d} {3:02d} {4:02d}".format(IYEAR, IDAY, IHOUR, MIN, ISEC)
 time = datetime.strptime(time, "%Y %j %H %M %S")
 time = [time.year,time.month, time.day, time.hour,time.minute,time.second]
 
@@ -79,20 +83,20 @@ else:
         sc_points = cx.MAGtoGEO(points,time,'car','car')
         title='MAG to GEO'
     
-plt.plot(points[:,0],sc_points[:,0] - gp_points[:,0])
-plt.title(title + ' x-axis')
-plt.xlabel('1 unit')
-plt.ylabel('spacepy - geopack x-axis')
-plt.show()
+# plt.plot(points[:,0],sc_points[:,0] - gp_points[:,0])
+# plt.title(title + ' x-axis')
+# plt.xlabel('1 unit')
+# plt.ylabel('spacepy - geopack x-axis')
+# plt.show()
 
-plt.plot(points[:,1],sc_points[:,1] - gp_points[:,1])
-plt.title(title + ' y-axis')
-plt.xlabel('1 unit')
-plt.ylabel('spacepy - geopack y-axis')
-plt.show()
+# plt.plot(points[:,1],sc_points[:,1] - gp_points[:,1])
+# plt.title(title + ' y-axis')
+# plt.xlabel('1 unit')
+# plt.ylabel('spacepy - geopack y-axis')
+# plt.show()
 
-plt.plot(points[:,2],sc_points[:,2] - gp_points[:,2])
-plt.title(title + ' z-axis')
-plt.xlabel('1 unit')
-plt.ylabel('spacepy - geopack z-axis')
-plt.show()
+# plt.plot(points[:,2],sc_points[:,2] - gp_points[:,2])
+# plt.title(title + ' z-axis')
+# plt.xlabel('1 unit')
+# plt.ylabel('spacepy - geopack z-axis')
+# plt.show()

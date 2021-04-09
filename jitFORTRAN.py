@@ -6,8 +6,8 @@ import shutil
 class Fortran_Subroutine:
     """python class allowing for the definition of jit compiled fortran subroutines using f2py
 
-    passed a string that is the regex for a fortran subroutine, along with the 
-    subroutines name string. The name passed much match the name in the script 
+    passed a string that is the regex for a fortran subroutine, along with the
+    subroutines name string. The name passed much match the name in the script
     in order to function properly
 
     instance = Fortran_Subroutine(script, subroutine_name)
@@ -16,7 +16,7 @@ class Fortran_Subroutine:
     instance.execute(*args)
 
     the compiling of the script will happen automatically the first time instance.execute is
-    called, but not for sucessive calls so long as the class instance remains in memory. 
+    called, but not for sucessive calls so long as the class instance remains in memory.
     A compilation (or recompilation) can be forced by calling:
     instance.compile()
 
@@ -41,6 +41,7 @@ class Fortran_Subroutine:
         ###### set f2py_args , a list such that ' '.join(f2py_args) would be executed in terminal on linux to compile to *.so file
         if isinstance(self.include, str):
             if os.path.exists(self.include+'.o'):
+
                 pass ## TODO: check if existing .o was properly compiled with -fPIC
             elif os.path.exists(self.include+'.f'):
                 os.system('gfortran -c -fPIC %s.f -o %s.o'%(self.include,self.include))
@@ -50,14 +51,15 @@ class Fortran_Subroutine:
                 raise FileNotFoundError ('no file for %s{.f,.f90,.o}'%(self.include))
 
             f2py_args = ['f2py','-c',scriptfile, '-I', '%s.o'%(self.include), '-m', 'jitFORTRAN_exe', '-DF2PY_REPORT_ON_ARRAY_COPY=1']
+            print(' '.join(f2py_args))
         else:
             f2py_args = ['f2py','-c',scriptfile, '-m', 'jitFORTRAN_exe', '-DF2PY_REPORT_ON_ARRAY_COPY=1']
 
         ###### try to use numpy.f2py directly to get *.so file, if fails use os.system() to mimick terminal
         try:
             from numpy.f2py.f2py2e import main
-            sys.argv = f2py_args[:]
-            main()
+            sys.argv = f2py_args[:] # https://docs.python.org/3/library/sys.html
+            main() # https://chromium.googlesource.com/external/github.com/numpy/numpy/+/maintenance/1.3.x/numpy/f2py/f2py2e.py
             sys.argv = backup_sys_argv[:]
         except:
             raise RuntimeWarning ('EXCEPTED')
@@ -68,6 +70,7 @@ class Fortran_Subroutine:
         ### move *.so to temporary directory, import the library now in the temporary directory, and store callable subroutine
         shutil.move('jitFORTRAN_exe.so', os.path.join(tempdir, 'jitFORTRAN_exe.so'))
         sys.path.append(tempdir)
+
         import jitFORTRAN_exe
         reload(jitFORTRAN_exe)
         exec('sub = jitFORTRAN_exe.'+self.subroutineName.lower())
@@ -82,4 +85,3 @@ class Fortran_Subroutine:
             self.compile()
 
         return self.activeSubroutine(*args)
-
