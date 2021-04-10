@@ -15,7 +15,7 @@ ISEC = 0
 
 
 J = 1 # test out 1 and -1 for both sc and gp
-arr_size = 10**3
+arr_size = 10**7
 X1 = np.ones(arr_size,dtype=np.float64)
 Y1 = np.ones(arr_size,dtype=np.float64)
 Z1 = np.ones(arr_size,dtype=np.float64)
