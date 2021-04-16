@@ -17,7 +17,10 @@ from matplotlib import pyplot as plt
 #  <-400,0,0> SMGSW_08
 debug = False
 
-# options: SMGSW_08_V , GEOMAG_08_V
+# options: SMGSW_08_V , GEOMAG_08_V, 
+# to be made: SPHCAR_08_V, GEIGEO_08_V, 
+# MAGSM_08_V, GEOGSW_08_V, GEODGEO_08_V ** this one will be strange
+# done but not tested: GSWGSE_08_V,
 wrapper_subroutine_name='GEOMAG_08_V'
 # allowable timeframe 1965-2020
 IYEAR = 1997

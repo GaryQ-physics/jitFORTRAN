@@ -1,10 +1,10 @@
-!SMGSW_08_V
-! wrapper function for Geopack_08 SMGSW_08 subroutine. 
-      SUBROUTINE SMGSW_08_V(XSM_V,YSM_V,ZSM_V,XGSW_V,YGSW_V,ZGSW_V,
+! MAGSM_08_V
+! wrapper function for Geopack_08 MAGSM_08 subroutine. 
+      SUBROUTINE MAGSM_08_V (XMAG_V,YMAG_V,ZMAG_V,XSM_V,YSM_V,ZSM_V,
      1                       J,
      2                       IYEAR,IDAY,IHOUR,MIN,ISEC,
      3                       N)
-C          vectorizes SMGSW_08
+C          vectorizes MAGSM_08
 
 C-----time of coordinate transform:
 C     IYEAR   -  YEAR NUMBER (FOUR DIGITS)
@@ -14,16 +14,16 @@ C     MIN   -  MINUTE OF HOUR (00 TO 59)
 C     ISEC  -  SECONDS OF MINUTE (00 TO 59)
 
 C                  J>0                 J<0
-C      INPUT:  J,XSM,YSM,ZSM        J,XGSW,YGSW,ZGSW
-C     OUTPUT:  XGSW,YGSW,ZGSW       XSM,YSM,ZSM
+C      INPUT:  J,XMAG,YMAG,ZMAG        J,XSM,YSM,ZSM
+C     OUTPUT:  XSM,YSM,ZSM               XMAG,YMAG,ZMAG
 
       IMPLICIT NONE
 C inputed dimension of arrays
       INTEGER*8 N
+      REAL*8  XMAG_V(N), YMAG_V(N), ZMAG_V(N)
+!f2py intent(in,out) ::  XMAG_V, YMAG_V, ZGSW_V
       REAL*8  XSM_V(N), YSM_V(N), ZSM_V(N)
 !f2py intent(in,out) ::  XSM_V, YSM_V, ZSM_V
-      REAL*8  XGSW_V(N), YGSW_V(N), ZGSW_V(N)
-!f2py intent(in,out) ::  XGSW_V, YGSW_V, ZGSW_V
       INTEGER*4 J, IYEAR,IDAY,IHOUR,MIN,ISEC
       INTEGER*8 ind
 
@@ -32,7 +32,7 @@ C  RECALC_08 prepares elements of rot matrix and puts in common block
       
       DO 10 ind=1,N
       
-      CALL SMGSW_08 (XSM_V(ind),YSM_V(ind),ZSM_V(ind),
-     1               XGSW_V(ind),YGSW_V(ind),ZGSW_V(ind), J)
+      CALL MAGSM_08 (XMAG_V(ind),YMAG_V(ind),ZMAG_V(ind),
+     1               XSM_V(ind),YSM_V(ind),ZSM_V(ind), J)
 10    CONTINUE
       END
