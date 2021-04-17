@@ -9,6 +9,7 @@ import jitFORTRAN
 import cxtransform as cx
 from datetime import datetime 
 from matplotlib import pyplot as plt
+import time as tm
 
 # Tsyganenko uses Geocentric-Solar Wind GSW instead of GSM. GSW has the positive
 # x-axis pointing antiparallel to the solar wind. He chose this coordinate system
@@ -28,6 +29,7 @@ debug = False
 # if J<0, then X1,Y1,Z1 <- X2, Y2,Z2
 J = 1 # test out 1 and -1 for both sc and gp
 # done but not tested: GSWGSE_08_V, GEIGEO_08_V, MAGSM_08_V, GEOGSW_08_V
+one_sec_diff = True
 wrap_sub_names = ['SMGSW_08_V','GEOMAG_08_V','GSWGSE_08_V','GEIGEO_08_V',
                      'MAGSM_08_V','GEOGSW_08_V']
 for wrap_sub_name in wrap_sub_names:
@@ -67,8 +69,7 @@ for wrap_sub_name in wrap_sub_names:
     time = datetime.strptime(time, "%Y %j %H %M %S")
     time = [time.year,time.month, time.day, time.hour,time.minute,time.second]
     
-    # print('\n     i got git\n')
-    # print(J)
+
     if J>0:
         points = np.column_stack((X1,Y1,Z1))
         gp_points = np.column_stack((X2,Y2,Z2))
@@ -92,7 +93,6 @@ for wrap_sub_name in wrap_sub_names:
             sc_points = cx.GEOtoGSW(points,time,'car','car')
             title='GEO to GSW'
     else:
-        # print('\n     i got git\n')
         points = np.column_stack((X2,Y2,Z2))
         gp_points = np.column_stack((X1,Y1,Z1))
         if wrap_sub_name=='SMGSW_08_V':
@@ -108,15 +108,58 @@ for wrap_sub_name in wrap_sub_names:
     plt.xlabel('1 unit')
     plt.ylabel('spacepy - geopack x-axis')
     plt.show()
+    plt.savefig('figures/'+title + 'x_axis')
     
     plt.plot(points[:,1],sc_points[:,1] - gp_points[:,1])
     plt.title(title + ' y-axis')
     plt.xlabel('1 unit')
     plt.ylabel('spacepy - geopack y-axis')
     plt.show()
+    plt.savefig('figures/'+title + 'y_axis')
     
     plt.plot(points[:,2],sc_points[:,2] - gp_points[:,2])
     plt.title(title + ' z-axis')
     plt.xlabel('1 unit')
     plt.ylabel('spacepy - geopack z-axis')
     plt.show()
+    plt.savefig('figures/'+title + 'z_axis')
+
+    if one_sec_diff:
+        # allowable timeframe 1965-2020
+
+        ISEC += 1
+        
+        X2 = np.zeros(arr_size, dtype=np.float64)
+        Y2 = np.zeros(arr_size, dtype=np.float64)
+        Z2 = np.zeros(arr_size, dtype=np.float64)
+        
+
+        start_time = tm.time()
+        geomag_08_V_F.execute(X1,Y1,Z1,X2,Y2,Z2,
+                            J,
+                            IYEAR,IDAY,IHOUR,MIN,ISEC,
+                            N)
+        points_1sec = np.column_stack((X2,Y2,Z2))
+        
+        print("%s --- %s seconds ---" % (title,tm.time() - start_time))
+        print('\n\n        stop!\n\n')
+        plt.plot(points[:,0],points_1sec[:,0] - gp_points[:,0])
+        plt.title(title + ' x-axis, 1s difference')
+        plt.xlabel('1 unit')
+        plt.ylabel('geopack 1s - geopack 0s x-axis')
+        plt.show()
+        plt.savefig('figures/'+title + 'x_axis 1s diff')
+        
+        # plt.plot(points[:,1],points_1sec[:,1] - gp_points[:,1])
+        # plt.title(title + ' y-axis, 1s difference')
+        # plt.xlabel('1 unit')
+        # plt.ylabel('geopack 1s - geopack 0s sec y-axis')
+        # plt.show()
+        # plt.savefig('figures/'+title + 'x_axis 1s diff')
+        
+        # plt.plot(points[:,0],points_1sec[:,0] - gp_points[:,0])
+        # plt.title(title + ' x-axis, 1s difference')
+        # plt.xlabel('1 unit')
+        # plt.ylabel('geopack 1s - geopack 0s x-axis')
+        # plt.show()
+        # plt.savefig('figures/'+title + 'x_axis 1s diff')

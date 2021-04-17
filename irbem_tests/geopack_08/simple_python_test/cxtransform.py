@@ -159,7 +159,7 @@ def GEOtoGEI(v_GEO, time, ctype_in, ctype_out):
 
 def GEOtoSM(v_GEO, time, ctype_in, ctype_out):
     return transform(v_GEO, time, 'GEO', 'SM', ctype_in=ctype_in, ctype_out=ctype_out)
-# added by angel GSM to GSE
+# added by Angel
 def GSEtoGSM(v_GSE, time, ctype_in, ctype_out):
     return transform(v_GSE, time, 'GSE', 'GSM', ctype_in=ctype_in, ctype_out=ctype_out)
 
@@ -171,6 +171,12 @@ def SMtoGSM(v_SM, time, ctype_in, ctype_out):
 
 def GSMtoSM(v_SM, time, ctype_in, ctype_out):
     return transform(v_SM, time, 'GSM', 'SM', ctype_in=ctype_in, ctype_out=ctype_out)
+
+def GEItoGEO(v_GEI, time, ctype_in, ctype_out):
+    return transform(v_GEI, time, 'GEI','GEO', ctype_in=ctype_in, ctype_out=ctype_out)
+    
+def GEOtoGSW(v_GEO, time, ctype_in, ctype_out):
+    return transform(v_GEO, time, 'GEO','GSM', ctype_in=ctype_in, ctype_out=ctype_out)
 
 def StoC(r, theta, phi):
     """Convert from spherical to cartesian coordinates
