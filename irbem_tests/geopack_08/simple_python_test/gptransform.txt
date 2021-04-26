@@ -1,0 +1,102 @@
+! geopack transformations
+! wrapper function for Geopack_08 coordinate transformation subroutines.
+      SUBROUTINE gptransform (Xin,Yin,Zin, Xout,Yout,Zout,
+     1                       trans,
+     2                       IYEAR,IDAY,IHOUR,MIN,ISEC,N)
+
+C-----INPUT PARAMETERS:
+C     Xin, Yin, Zin : 1xN arrays of floats in the old coordinate system
+C     time of coordinate transform:
+C     IYEAR   -  YEAR NUMBER (FOUR DIGITS)
+C     IDAY  -  DAY OF YEAR (DAY 1 = JAN 1)
+C     IHOUR -  HOUR OF DAY (00 TO 23)
+C     MIN   -  MINUTE OF HOUR (00 TO 59)
+C     ISEC  -  SECONDS OF MINUTE (00 TO 59)
+C
+C-----OUTPUT PARAMETERS:
+C     Xout, Yout, Zout : 1xN arrays of floats in the new coordinate system
+
+c Tsyganenko uses J to determine the direction of the transformation.
+c For examples take SMGSW_08, if J is positive it converts from SM to GSW,
+c but if J is negative it goes from GSW to SM. positive J always takes the
+c first coordinate to be the input and the second to be the output. The roles
+c reverse for regular J. The user of this script does not need to specify J
+c because a series of "if-else" statements will determine the proper choice of
+c J based on the "trans" keyword i.e. "SM2GSW"
+
+c Tsyganenko uses Geocentric Solar Wind GSW coordinate system instead of
+c Geocentric Solar Magnetic GSM. GSW becomes identical to GSM when the solar
+c wind velocity's only component is in the -x-direction of the GSE coordinate system.
+c This subroutine will always set the solar wind velocity so that the GSW
+c becomes identical to the GSM coordinate system.
+
+      IMPLICIT NONE
+      INTEGER*8 N, ind
+
+
+      REAL*8  Xin(N), Yin(N), Zin(N)
+      INTEGER*4 IYEAR,IDAY,IHOUR,MIN,ISEC
+      CHARACTER(10) :: trans
+!f2py intent(in) ::  Xin, Yin, Zin
+!f2py intent(in) :: trans, IYEAR, IDAY, IHOUR, MIN, ISEC
+!f2py intent(hide) :: N
+      REAL*8  Xout(N), Yout(N), Zout(N)
+!f2py intent(out) ::  Xout, Yout, Zout
+      N = SIZE(Xin)
+
+C  RECALC_08 prepares elements of rot matrix and puts in common block
+      CALL RECALC_08(IYEAR,IDAY,IHOUR,MIN,ISEC,-4.0d2,0.0d0,0.0d0)
+      N = SIZE(Xin)
+      DO 10 ind=1,N
+
+c these transformations only rely on one call.
+      IF (trans=='GEItoGEO') THEN
+        CALL GEIGEO_08 (Xin(ind),Yin(ind),Zin(ind),
+     1               Xout(ind),Yout(ind),Zout(ind), 1)
+      ELSE IF (trans=='GEOtoGEI') THEN
+        CALL GEIGEO_08 (Xout(ind),Yout(ind),Zout(ind),
+     1               Xin(ind),Yin(ind),Zin(ind), -1)
+
+      ELSE IF (trans=='GEOtoGSM') THEN
+        CALL GEOGSW_08 (Xin(ind),Yin(ind),Zin(ind),
+     1               Xout(ind),Yout(ind),Zout(ind), 1)
+      ELSE IF (trans=='GSMtoGSO') THEN
+         CALL GEOGSW_08 (Xout(ind),Yout(ind),Zout(ind),
+     1               Xin(ind),Yin(ind),Zin(ind), -1)
+
+      ELSE IF (trans=='GEOtoMAG') THEN
+        CALL GEOMAG_08 (Xin(ind),Yin(ind),Zin(ind),
+     1               Xout(ind),Yout(ind),Zout(ind), 1)
+      ELSE IF (trans=='MAGtoGEO') THEN
+        CALL GEOMAG_08 (Xout(ind),Yout(ind),Zout(ind),
+     1               Xin(ind),Yin(ind),Zin(ind), -1)
+
+      ELSE IF (trans=='GSMtoGSE') THEN
+        CALL GSWGSE_08 (Xin(ind),Yin(ind),Zin(ind),
+     1               Xout(ind),Yout(ind),Zout(ind), 1)
+      ELSE IF (trans=='GSEtoGSM') THEN
+        CALL GSWGSE_08 (Xout(ind),Yout(ind),Zout(ind),
+     1               Xin(ind),Yin(ind),Zin(ind), -1)
+
+      ELSE  IF (trans=='MAGtoSM') THEN
+        CALL MAGSM_08 (Xin(ind),Yin(ind),Zin(ind),
+     1               Xout(ind),Yout(ind),Zout(ind), 1)
+      ELSE IF (trans=='SMtoMAG') THEN
+        CALL MAGSM_08 (Xout(ind),Yout(ind),Zout(ind),
+     1               Xin(ind),Yin(ind),Zin(ind), -1)
+
+      ELSE IF (trans=='SMtoGSM') THEN
+        CALL SMGSW_08 (Xin(ind),Yin(ind),Zin(ind),
+     1                 Xout(ind),Yout(ind),Zout(ind), 1)
+      ELSE IF (trans=='GSMtoSM') THEN
+        CALL SMGSW_08 (Xout(ind),Yout(ind),Zout(ind),
+     1               Xin(ind),Yin(ind),Zin(ind), -1)
+
+c these transformations rely on multiple calls.
+CELSE IF (trans='GSMtoMAG') THEN
+C  CALL SMGSW_08 (Xin(ind),Yin(ind),Zin(ind),
+C1               Xin(ind),Yin(ind),Zin(ind), -1)
+C
+      END IF
+10    CONTINUE
+      END
