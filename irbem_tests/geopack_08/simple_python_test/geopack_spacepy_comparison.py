@@ -32,7 +32,9 @@ trans = ['GEItoGEO','GEOtoGEI',
          'GEOtoMAG','MAGtoGEO',
          'GSMtoGSE','GSEtoGSM',
          'MAGtoSM','SMtoMAG',
-         'SMtoGSM','GSMtoSM'] 
+         'SMtoGSM','GSMtoSM',
+         # the following rely on more than one geopack function
+         ] 
 
 
 # test out 1 and -1 for both sc and gp

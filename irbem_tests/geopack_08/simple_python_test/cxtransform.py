@@ -175,8 +175,6 @@ def GSMtoSM(v_SM, time, ctype_in, ctype_out):
 def GEItoGEO(v_GEI, time, ctype_in, ctype_out):
     return transform(v_GEI, time, 'GEI','GEO', ctype_in=ctype_in, ctype_out=ctype_out)
     
-def GEOtoGSW(v_GEO, time, ctype_in, ctype_out):
-    return transform(v_GEO, time, 'GEO','GSM', ctype_in=ctype_in, ctype_out=ctype_out)
 
 def StoC(r, theta, phi):
     """Convert from spherical to cartesian coordinates
