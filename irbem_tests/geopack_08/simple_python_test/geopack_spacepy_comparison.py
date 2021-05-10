@@ -27,14 +27,14 @@ debug = False
 # generic_tranformation(X1,Y1,Z1,X2,Y2,Z2,J)
 # if J>0, then X1,Y1,Z1 -> X2, Y2,Z2
 # if J<0, then X1,Y1,Z1 <- X2, Y2,Z2
-trans = ['GEItoGEO','GEOtoGEI',
-         # 'GEOtoGSM','GSMtoGSM',
-         # 'GEOtoMAG','MAGtoGEO',
-         # 'GSMtoGSE','GSEtoGSM',
-         # 'MAGtoSM','SMtoMAG',
-         # 'SMtoGSM','GSMtoSM',
-         # the following rely on more than one geopack function
-         ] 
+trans = []
+csys = ['GSM','SM','GSE','MAG','GEO','GEI']
+for c1 in csys:
+    for c2 in csys:
+        if c1 != c2:
+            trans.append('to'.join((c1,c2)))
+
+fsys = open('csys_trans_analysis.txt','w')
 
 
 # test out 1 and -1 for both sc and gp
@@ -42,6 +42,7 @@ trans = ['GEItoGEO','GEOtoGEI',
 # one_sec_diff = True
 # wrap_sub_names = ['SMGSW_08_V','GEOMAG_08_V','GSWGSE_08_V','GEIGEO_08_V',
 #                      'MAGSM_08_V','GEOGSW_08_V']
+ev = []
 wrap_sub_name = 'gptransform'
 for t in trans:
     # allowable timeframe 1965-2020
@@ -50,7 +51,7 @@ for t in trans:
     
     
 
-    arr_size = 23**1
+    arr_size = 100
     X1 = np.arange(0,arr_size,dtype=np.float64)
     Y1 = np.arange(0,arr_size,dtype=np.float64)
     Z1 = np.arange(0,arr_size,dtype=np.float64)
@@ -69,43 +70,62 @@ for t in trans:
                                        dtime
                                        )
     
-    # time = "{0:04} {1:03d} {2:02d} {3:02d} {4:02d}".format(IYEAR, IDAY, IHOUR, MIN, ISEC)
-    # time = datetime.strptime(time, "%Y %j %H %M %S")
-    # time = [time.year,time.month, time.day, time.hour,time.minute,time.second]
+    time = "{0:04} {1:03d} {2:02d} {3:02d} {4:02d}".format(dtime[0], 
+                                                           dtime[1], dtime[2], 
+                                                           dtime[3], dtime[4])
+    time = datetime.strptime(time, "%Y %j %H %M %S")
+    time = [time.year,time.month, time.day, time.hour,time.minute,time.second]
     
+    initial, final = t.split('to')
+    
+    spcoord = cx.transform(np.column_stack([X1,Y1,Z1]), time, initial, final)
+    geocoord = np.column_stack([X2,Y2,Z2])
+    magdiff = np.linalg.norm(geocoord-spcoord)/np.linalg.norm(spcoord)
+    ev.append(magdiff)
+    fsys.write("{} : {}\n".format(t, magdiff))
 
-    # if J>0:
-    #     points = np.column_stack((X1,Y1,Z1))
-    #     gp_points = np.column_stack((X2,Y2,Z2))
+fsys.close()
 
-    #     if wrap_sub_name=='SMGSW_08_V':
-    #         sc_points = cx.SMtoGSM(points,time,'car','car')
-    #         title='SM to GSW'
-    #     elif wrap_sub_name=='GEOMAG_08_V':
-    #         sc_points = cx.GEOtoMAG(points,time,'car','car')
-    #         title='GEO to MAG'
-    #     elif wrap_sub_name=='GSWGSE_08_V':
-    #         sc_points = cx.GSMtoGSE(points,time,'car','car')
-    #         title='GSM to GSE'
-    #     elif wrap_sub_name=='GEIGEO_08_V':
-    #         sc_points = cx.GEItoGEO(points,time,'car','car')
-    #         title='GEI to GEO'
-    #     elif wrap_sub_name=='MAGSM_08_V':
-    #         sc_points = cx.MAGtoSM(points,time,'car','car')
-    #         title='MAG to SM'
-    #     elif wrap_sub_name=='GEOGSW_08_V':
-    #         sc_points = cx.GEOtoGSW(points,time,'car','car')
-    #         title='GEO to GSW'
-    # else:
-    #     points = np.column_stack((X2,Y2,Z2))
-    #     gp_points = np.column_stack((X1,Y1,Z1))
-    #     if wrap_sub_name=='SMGSW_08_V':
-    #         # print('i got hit!\n')
-    #         sc_points = cx.GSMtoSM(points,time,'car','car')
-    #         title='GSM to SM'
-    #     elif wrap_sub_name=='GEOMAG_08_V':
-    #         sc_points = cx.MAGtoGEO(points,time,'car','car')
-    #         title='MAG to GEO'
+
+"""
+analysis thus far leads me to believe that the problem is with 
+multiple calls since they tend to have the largest  error. 
+perhaps I should create an intermediate vector tempx tempy tempz. 
+
+This is the results mag(spcoord-geocoord)/mag(geocoord)
+
+    GSMtoSM : 0.000109721573247
+    GSMtoGSE : 0.000332588127469
+    GSMtoMAG : 0.361201084308       - double - uses MAGSM SMGSW
+    GSMtoGEO : 0.000329302792926
+    GSMtoGEI : 1.13805818542        - double - uses GEOGSW GEIGEO
+    SMtoGSM : 0.000109721573247
+    SMtoGSE : 0.342871033723        - double - uses SMGWE GSWGSE
+    SMtoMAG : 7.15463008082e-05
+    SMtoGEO : 1.20848587954         - double - 
+    SMtoGEI : 1.0599030284
+    GSEtoGSM : 0.000331975572344
+    GSEtoSM : 0.219822175333
+    GSEtoMAG : 0.328390813522
+    GSEtoGEO : 0.220110928754
+    GSEtoGEI : 1.1531113136
+    MAGtoGSM : 1.37525404825         - double - uses MAGSM SMGSW
+    MAGtoSM : 7.15463008082e-05
+    MAGtoGSE : 1.4642099926
+    MAGtoGEO : 0.0003161328122
+    MAGtoGEI : 1.07845017083
+    GEOtoGSM : 0.000259748696309
+    GEOtoSM : 0.662392857954
+    GEOtoGSE : 1.17362395871
+    GEOtoMAG : 0.000172432969852
+    GEOtoGEI : 2.06155857114e-12
+    GEItoGSM : 1.20396615341         - double - uses GEOGSW GEIGEO
+    GEItoSM : 0.394914270574
+    GEItoGSE : 1.06287956704
+    GEItoMAG : 1.20384074267
+    GEItoGEO : 2.06155857114e-12
+
+"""
         
     # plt.plot(points[:,0],sc_points[:,0] - gp_points[:,0])
     # plt.title(title + ' x-axis')
