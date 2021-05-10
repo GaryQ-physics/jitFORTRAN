@@ -1,21 +1,38 @@
 ! geopack transformations
 ! wrapper function for Geopack_08 coordinate transformation subroutines.
+ccc f2py -c jitFORTRAN_script.f90 -I geopack_08.o -m jitFORTRAN_exe -DF2PY_REPORT_ON_ARRAY_COPY=1
       SUBROUTINE gptransform (Xin,Yin,Zin, Xout,Yout,Zout,
      1                       trans,
-     2                       IYEAR,IDAY,IHOUR,MIN,ISEC,N)
+     2                       datetime,N)
 
+C----------------------------------------------------------------------
+C     Uses: transforms vector from one coordinate system to another one
+C           using geopack. Geopack was created by Tsyganenko. 
+C    
+C     List of available coordinate systems:
+C        GEO - Geocentric 
+C        MAG - geomagnetic  
+C        SM  - solar magnetic 
+C        GSM - Geocentric Solar Magnetic
+C        GSE - geocentric solar ecliptic
+C        GEI - geocentric intertial 
+C        
+C
 C-----INPUT PARAMETERS:
 C     Xin, Yin, Zin : 1xN arrays of floats in the old coordinate system
-C     time of coordinate transform:
-C     IYEAR   -  YEAR NUMBER (FOUR DIGITS)
-C     IDAY  -  DAY OF YEAR (DAY 1 = JAN 1)
-C     IHOUR -  HOUR OF DAY (00 TO 23)
-C     MIN   -  MINUTE OF HOUR (00 TO 59)
-C     ISEC  -  SECONDS OF MINUTE (00 TO 59)
+C     datetime : 1x5 array of floats
+C       datetime(0)   -  YEAR NUMBER (FOUR DIGITS)
+C       datetme(1)  -  DAY OF YEAR (DAY 1 = JAN 1)
+C       datetime(2) -  HOUR OF DAY (00 TO 23)
+C       datetime(3)   -  MINUTE OF HOUR (00 TO 59)
+C       datetime(4)  -  SECONDS OF MINUTE (00 TO 59)
+C     trans : string that specifies the coordinate transformation. 
+C             Follows the pattern "GEOtoMAG".
 C
 C-----OUTPUT PARAMETERS:
 C     Xout, Yout, Zout : 1xN arrays of floats in the new coordinate system
-
+C
+C
 c Tsyganenko uses J to determine the direction of the transformation.
 c For examples take SMGSW_08, if J is positive it converts from SM to GSW,
 c but if J is negative it goes from GSW to SM. positive J always takes the
@@ -31,18 +48,26 @@ c This subroutine will always set the solar wind velocity so that the GSW
 c becomes identical to the GSM coordinate system.
 
       IMPLICIT NONE
-      INTEGER*8 N, ind
+      INTEGER*8 N, ind,IYEAR,IDAY,IHOUR,MIN,ISEC, datetime(5)
 
 
       REAL*8  Xin(N), Yin(N), Zin(N)
-      INTEGER*4 IYEAR,IDAY,IHOUR,MIN,ISEC
+
       CHARACTER(10) :: trans
 !f2py intent(in) ::  Xin, Yin, Zin
-!f2py intent(in) :: trans, IYEAR, IDAY, IHOUR, MIN, ISEC
+!f2py intent(in) :: trans, datetime
 !f2py intent(hide) :: N
       REAL*8  Xout(N), Yout(N), Zout(N)
 !f2py intent(out) ::  Xout, Yout, Zout
       N = SIZE(Xin)
+      
+      IYEAR = datetime(1)
+      IDAY = datetime(2)
+      IHOUR = datetime(3)
+      min = datetime(4)
+      ISEC = datetime(5)
+      
+      PRINT *, IYEAR
 
 C  RECALC_08 prepares elements of rot matrix and puts in common block
       CALL RECALC_08(IYEAR,IDAY,IHOUR,MIN,ISEC,-4.0d2,0.0d0,0.0d0)
@@ -211,8 +236,8 @@ c these transformations rely on multiple calls.
      1               Xin(ind),Yin(ind),Zin(ind), -1)
         CALL GEIGEO_08(Xout(ind),Yout(ind),Zout(ind),
      1               Xin(ind),Yin(ind),Zin(ind), -1)
-     
-     ELSE 
+
+      ELSE
        PRINT *, "INCORRECT VALUE: ", trans, "FOR trans"
        PRINT *, "INCORRECT VALUE: ", trans, "FOR trans"
        PRINT *, "INCORRECT VALUE: ", trans, "FOR trans"

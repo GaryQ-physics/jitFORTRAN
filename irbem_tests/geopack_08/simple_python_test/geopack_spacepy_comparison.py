@@ -28,11 +28,11 @@ debug = False
 # if J>0, then X1,Y1,Z1 -> X2, Y2,Z2
 # if J<0, then X1,Y1,Z1 <- X2, Y2,Z2
 trans = ['GEItoGEO','GEOtoGEI',
-         'GEOtoGSM','GSMtoGSM',
-         'GEOtoMAG','MAGtoGEO',
-         'GSMtoGSE','GSEtoGSM',
-         'MAGtoSM','SMtoMAG',
-         'SMtoGSM','GSMtoSM',
+         # 'GEOtoGSM','GSMtoGSM',
+         # 'GEOtoMAG','MAGtoGEO',
+         # 'GSMtoGSE','GSEtoGSM',
+         # 'MAGtoSM','SMtoMAG',
+         # 'SMtoGSM','GSMtoSM',
          # the following rely on more than one geopack function
          ] 
 
@@ -45,11 +45,8 @@ trans = ['GEItoGEO','GEOtoGEI',
 wrap_sub_name = 'gptransform'
 for t in trans:
     # allowable timeframe 1965-2020
-    IYEAR = 1997
-    IDAY = 1
-    IHOUR = 0
-    MIN = 0
-    ISEC = 0
+
+    dtime = np.array((1997,1,0,0,0),dtype=np.int32)
     
     
 
@@ -69,7 +66,7 @@ for t in trans:
     
     X2, Y2, Z2 = geomag_08_V_F.execute(X1,Y1,Z1,
                                        t,
-                                       IYEAR,IDAY,IHOUR,MIN,ISEC
+                                       dtime
                                        )
     
     # time = "{0:04} {1:03d} {2:02d} {3:02d} {4:02d}".format(IYEAR, IDAY, IHOUR, MIN, ISEC)
