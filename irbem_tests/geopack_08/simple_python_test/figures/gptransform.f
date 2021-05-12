@@ -2,8 +2,8 @@
 ! wrapper function for Geopack_08 coordinate transformation subroutines.
 ccc f2py -c jitFORTRAN_script.f90 -I geopack_08.o -m jitFORTRAN_exe -DF2PY_REPORT_ON_ARRAY_COPY=1
       SUBROUTINE gptransform (Xin,Yin,Zin, Xout,Yout,Zout,
-     1                       trans,xtmp, ytmp, ztmp,xtmp2,ytmp2,ztmp2,
-     2                       datetime,N)
+     1                       trans,xtmp, ytmp, ztmp,xtmp2
+     2                       datetime,N,ytmp2,ztmp2)
 
 C----------------------------------------------------------------------
 C     Uses: transforms vector from one coordinate system to another one
@@ -67,7 +67,7 @@ c becomes identical to the GSM coordinate system.
       min = datetime(4)
       ISEC = datetime(5)
 
-
+      PRINT *, IYEAR
 
 C  RECALC_08 prepares elements of rot matrix and puts in common block
       CALL RECALC_08(IYEAR,IDAY,IHOUR,MIN,ISEC,-4.0d2,0.0d0,0.0d0)
@@ -239,10 +239,10 @@ c these transformations rely on multiple calls.
 
       ELSE
        PRINT *, "INCORRECT VALUE: ", trans, "FOR trans"
-      
-     
-    
-   
+       PRINT *, "INCORRECT VALUE: ", trans, "FOR trans"
+       PRINT *, "INCORRECT VALUE: ", trans, "FOR trans"
+       PRINT *, "INCORRECT VALUE: ", trans, "FOR trans"
+       PRINT *, "INCORRECT VALUE: ", trans, "FOR trans"
 
 
 

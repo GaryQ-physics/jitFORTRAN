@@ -44,10 +44,15 @@ fsys = open('csys_trans_analysis.txt','w')
 #                      'MAGSM_08_V','GEOGSW_08_V']
 ev = []
 wrap_sub_name = 'gptransform'
+with open(wrap_sub_name +'.txt','r') as f:
+        wrapper_script = ''.join(f.readlines())
+geomag_08_V_F = jitFORTRAN.Fortran_Subroutine(wrapper_script,
+                                                  wrap_sub_name,
+                                                  include='geopack_08')
 for t in trans:
     # allowable timeframe 1965-2020
 
-    dtime = np.array((1997,1,0,0,0),dtype=np.int32)
+    dtime = np.array((1997,1,0,0,0)) # default is np.int64 to match fortran INTEGER*8
     
     
 
@@ -58,12 +63,9 @@ for t in trans:
     
     N = X1.size
     
-    with open(wrap_sub_name +'.txt','r') as f:
-        wrapper_script = ''.join(f.readlines())
     
-    geomag_08_V_F = jitFORTRAN.Fortran_Subroutine(wrapper_script,
-                                                  wrap_sub_name,
-                                                  include='geopack_08')
+    
+    
     
     X2, Y2, Z2 = geomag_08_V_F.execute(X1,Y1,Z1,
                                        t,
