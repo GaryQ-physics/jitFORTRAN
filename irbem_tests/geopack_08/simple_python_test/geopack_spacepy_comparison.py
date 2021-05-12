@@ -105,24 +105,24 @@ This is the results mag(spcoord-geocoord)/mag(geocoord)
     SMtoGEO : 1.20848587954         - double - 
     SMtoGEI : 1.0599030284
     GSEtoGSM : 0.000331975572344
-    GSEtoSM : 0.219822175333
-    GSEtoMAG : 0.328390813522
-    GSEtoGEO : 0.220110928754
+    GSEtoSM : 0.219822175333        - double
+    GSEtoMAG : 0.328390813522       - double
+    GSEtoGEO : 0.220110928754       - double
     GSEtoGEI : 1.1531113136
     MAGtoGSM : 1.37525404825         - double - uses MAGSM SMGSW
     MAGtoSM : 7.15463008082e-05
-    MAGtoGSE : 1.4642099926
+    MAGtoGSE : 1.4642099926          - double 
     MAGtoGEO : 0.0003161328122
-    MAGtoGEI : 1.07845017083
+    MAGtoGEI : 1.07845017083         - double
     GEOtoGSM : 0.000259748696309
-    GEOtoSM : 0.662392857954
-    GEOtoGSE : 1.17362395871
+    GEOtoSM : 0.662392857954         - double
+    GEOtoGSE : 1.17362395871        - double
     GEOtoMAG : 0.000172432969852
     GEOtoGEI : 2.06155857114e-12
     GEItoGSM : 1.20396615341         - double - uses GEOGSW GEIGEO
     GEItoSM : 0.394914270574
-    GEItoGSE : 1.06287956704
-    GEItoMAG : 1.20384074267
+    GEItoGSE : 1.06287956704         - double
+    GEItoMAG : 1.20384074267        - double
     GEItoGEO : 2.06155857114e-12
 
 """
