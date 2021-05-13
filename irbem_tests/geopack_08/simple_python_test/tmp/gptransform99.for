@@ -1,3 +1,75 @@
+      SUBROUTINE TRACE_08_W (X,Y,Z, datetime,
+     *  DIR, DSMAX, ERR, RLIM, R0, IOPT, PARMOD,
+     *  EXNAME, INNAME,
+     *  XF, YF, ZF, XX, YY, ZZ, L)
+
+!f2py intent(in) :: x,y,z,DIR,DSMAX,ERR,RLIM,R0,IOPT,PARMOD
+!f2py intent(in) :: EXNAME, INNAME, datetime
+!f2py intent(out) :: XX, YY, ZZ
+!f2py intent(hide) :: L,  XF, YF, ZF
+      CHARACTER(30) :: EXNAME, INNAME
+      REAL*8 :: XX(500), YY(500), ZZ(500), PARMOD(10)
+      INTEGER*8 datetime(5)
+
+      CALL RECALC_08_W (datetime)
+
+      CALL TRACE_08 (X,Y,Z,DIR,DSMAX,ERR,RLIM,R0,IOPT,
+     * PARMOD,EXNAME,INNAME,XF,YF,ZF,XX,YY,ZZ,L,500)
+      RETURN
+      END
+
+      SUBROUTINE RECALC_08_W (datetime)
+
+        INTEGER*8 IYEAR,IDAY,IHOUR,MIN,ISEC, datetime(5)
+!f2py intent(in) :: datetime
+
+        IYEAR = datetime(1)
+        IDAY = datetime(2)
+        IHOUR = datetime(3)
+        min = datetime(4)
+        ISEC = datetime(5)
+
+C  RECALC_08 prepares elements of rot matrix and puts in common block
+        CALL RECALC_08(IYEAR,IDAY,IHOUR,MIN,ISEC,-4.0d2,0.0d0,0.0d0)
+
+        RETURN
+      END
+
+      SUBROUTINE SPHtoCAR_08_V (R,THETA,RHO,X,Y,Z,N)
+
+        REAL*8 R(N), THETA(N), RHO(N), X(N), Y(N), Z(N)
+        INTEGER N
+!f2py intent(in) :: R, THETA, RHO
+!f2py intent(out) :: X, Y, Z
+!f2py intent(hide) :: N
+        DO 20 i=1, N
+          CALL SPHCAR_08 (R(i),THETA(i),RHO(i),X(i),Y(i),Z(i),1)
+20        CONTINUE
+          RETURN
+        END
+
+        SUBROUTINE CARtoSPH_08_V (R,THETA,RHO,X,Y,Z,N)
+
+          REAL*8 R(N), THETA(N), RHO(N), X(N), Y(N), Z(N)
+          INTEGER N
+!f2py intent(in) ::  X, Y, Z
+!f2py intent(out) :: R, THETA, RHO
+!f2py intent(hide) :: N
+          DO 30 i=1, N
+            CALL SPHCAR_08 (R(i),THETA(i),RHO(i),X(i),Y(i),Z(i),-1)
+30          CONTINUE
+            RETURN
+          END
+
+C        SUBROUTINE DATA
+C
+C          COMMON /GEOPACK1/ AA(10),SPS,CPS,BB(3),PSI,CC(18)
+C
+C          REAL SPS, CPS, PSI
+C          RETURN
+C        END
+
+
 ! geopack transformations
 ! wrapper function for Geopack_08 coordinate transformation subroutines.
 ccc f2py -c jitFORTRAN_script.f90 -I geopack_08.o -m jitFORTRAN_exe -DF2PY_REPORT_ON_ARRAY_COPY=1
@@ -239,11 +311,6 @@ c these transformations rely on multiple calls.
 
       ELSE
        PRINT *, "INCORRECT VALUE: ", trans, "FOR trans"
-
-
-
-
-
 
 
 
