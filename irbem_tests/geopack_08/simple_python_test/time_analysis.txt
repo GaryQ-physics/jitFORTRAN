@@ -1,0 +1,120 @@
+GSMtoSM: 
+    spacepy: 0.0100800991058 seconds
+    geopack: 6.98566436768e-05 seconds
+    %difference: 197.247016819 % 
+GSMtoGSE: 
+    spacepy: 0.00698590278625 seconds
+    geopack: 3.31401824951e-05 seconds
+    %difference: 198.111413043 % 
+GSMtoMAG: 
+    spacepy: 0.00764393806458 seconds
+    geopack: 2.90870666504e-05 seconds
+    %difference: 198.483671504 % 
+GSMtoGEO: 
+    spacepy: 0.00645995140076 seconds
+    geopack: 2.31266021729e-05 seconds
+    %difference: 198.573109738 % 
+GSMtoGEI: 
+    spacepy: 0.00718402862549 seconds
+    geopack: 4.29153442383e-05 seconds
+    %difference: 197.624703088 % 
+SMtoGSM: 
+    spacepy: 0.00889182090759 seconds
+    geopack: 2.31266021729e-05 seconds
+    %difference: 198.962344887 % 
+SMtoGSE: 
+    spacepy: 0.00702500343323 seconds
+    geopack: 3.50475311279e-05 seconds
+    %difference: 198.01431852 % 
+SMtoMAG: 
+    spacepy: 0.007169008255 seconds
+    geopack: 2.40802764893e-05 seconds
+    %difference: 198.660921445 % 
+SMtoGEO: 
+    spacepy: 0.0121250152588 seconds
+    geopack: 3.40938568115e-05 seconds
+    %difference: 198.878409381 % 
+SMtoGEI: 
+    spacepy: 0.00984001159668 seconds
+    geopack: 4.60147857666e-05 seconds
+    %difference: 198.138188834 % 
+GSEtoGSM: 
+    spacepy: 0.00681805610657 seconds
+    geopack: 2.19345092773e-05 seconds
+    %difference: 198.717278399 % 
+GSEtoSM: 
+    spacepy: 0.00981497764587 seconds
+    geopack: 3.19480895996e-05 seconds
+    %difference: 198.7022106 % 
+GSEtoMAG: 
+    spacepy: 0.00815606117249 seconds
+    geopack: 4.60147857666e-05 seconds
+    %difference: 197.755944422 % 
+GSEtoGEO: 
+    spacepy: 0.008052110672 seconds
+    geopack: 3.48091125488e-05 seconds
+    %difference: 198.278251128 % 
+GSEtoGEI: 
+    spacepy: 0.00760889053345 seconds
+    geopack: 4.19616699219e-05 seconds
+    %difference: 197.806170146 % 
+MAGtoGSM: 
+    spacepy: 0.00792813301086 seconds
+    geopack: 5.41210174561e-05 seconds
+    %difference: 197.287933094 % 
+MAGtoSM: 
+    spacepy: 0.0079140663147 seconds
+    geopack: 2.40802764893e-05 seconds
+    %difference: 198.786604595 % 
+MAGtoGSE: 
+    spacepy: 0.00735998153687 seconds
+    geopack: 4.10079956055e-05 seconds
+    %difference: 197.783647961 % 
+MAGtoGEO: 
+    spacepy: 0.00679612159729 seconds
+    geopack: 2.00271606445e-05 seconds
+    %difference: 198.824722795 % 
+MAGtoGEI: 
+    spacepy: 0.00934886932373 seconds
+    geopack: 2.78949737549e-05 seconds
+    %difference: 198.810038394 % 
+GEOtoGSM: 
+    spacepy: 0.00749492645264 seconds
+    geopack: 1.8835067749e-05 seconds
+    %difference: 198.997302872 % 
+GEOtoSM: 
+    spacepy: 0.0074098110199 seconds
+    geopack: 3.00407409668e-05 seconds
+    %difference: 198.384874219 % 
+GEOtoGSE: 
+    spacepy: 0.00673317909241 seconds
+    geopack: 3.40938568115e-05 seconds
+    %difference: 197.984780158 % 
+GEOtoMAG: 
+    spacepy: 0.00678491592407 seconds
+    geopack: 2.00271606445e-05 seconds
+    %difference: 198.822787471 % 
+GEOtoGEI: 
+    spacepy: 0.0101480484009 seconds
+    geopack: 2.19345092773e-05 seconds
+    %difference: 199.137284321 % 
+GEItoGSM: 
+    spacepy: 0.00758790969849 seconds
+    geopack: 3.71932983398e-05 seconds
+    %difference: 198.048902508 % 
+GEItoSM: 
+    spacepy: 0.00750613212585 seconds
+    geopack: 3.88622283936e-05 seconds
+    %difference: 197.93970802 % 
+GEItoGSE: 
+    spacepy: 0.00702500343323 seconds
+    geopack: 5.10215759277e-05 seconds
+    %difference: 197.115805789 % 
+GEItoMAG: 
+    spacepy: 0.00912094116211 seconds
+    geopack: 2.88486480713e-05 seconds
+    %difference: 198.738827944 % 
+GEItoGEO: 
+    spacepy: 0.00999307632446 seconds
+    geopack: 2.40802764893e-05 seconds
+    %difference: 199.038438653 % 
